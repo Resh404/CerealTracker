@@ -3,34 +3,25 @@ using CerealAPI.Data;
 using CerealAPI.Interfaces;
 using CerealAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql;
 
-
-// Establish database connection
-await EstablishDatabaseConnection();
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
-// Add other services
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
 builder.Services.AddScoped<ICerealRepository, CerealRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddDbContext<DataContext>((serviceProvider, options) =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("MySqlConnection");
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 36)));
 });
 
 var app = builder.Build();
-
-// Seed data if requested
-if (args.Length == 1 && args[0].ToLower() == "seeddata")
-    SeedData(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -38,33 +29,37 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    // Add production-specific error handling middleware
+    // For example: app.UseExceptionHandler("/Error");
+}
 
 app.UseHttpsRedirection();
 
-app.Run();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+// Seed data if requested
+if (args.Length == 1 && args[0].ToLower() == "seeddata")
+    SeedData(app);
+
+await app.RunAsync();
 
 // Seed data function
 void SeedData(IHost app)
 {
-    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+    var scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 
     using (var scope = scopedFactory.CreateScope())
     {
-        var service = scope.ServiceProvider.GetService<Seed>();
+        var service = scope.ServiceProvider.GetRequiredService<Seed>();
         service.SeedDataContext();
-    }
-}
-
-// Method to establish database connection
-async Task EstablishDatabaseConnection()
-{
-    try
-    {
-        await AdoDatabaseConnector.ConnectToDatabaseAsync();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error establishing database connection: {ex}");
-        throw;
     }
 }

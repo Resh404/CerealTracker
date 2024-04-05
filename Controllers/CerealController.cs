@@ -18,13 +18,19 @@ public class CerealController : Controller
 
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<Cereal>))]
-    public IActionResult GetCereals()
+    public async Task<IActionResult> GetCerealsAsync()
     {
-        var cereals =  _cerealRepository.GetCereals();
+        try
+        {
+            var cereals = await _cerealRepository.GetCerealsAsync(); // Assuming GetCereals() is asynchronous
 
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        return Ok(cereals);
+            return Ok(cereals);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or handle it as appropriate
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while fetching cereals.");
+        }
     }
+
 }

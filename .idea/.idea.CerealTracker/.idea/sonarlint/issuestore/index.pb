@@ -48,3 +48,5 @@ c
 3Migrations/20240405111651_InitialCreate.Designer.cs,9\6\96f0ced292535e92f5ce5e1bf175272c0eff754b
 V
 &Migrations/DataContextModelSnapshot.cs,7\2\728a54d99c5b4f32a0f10d344c7e747916808cb5
+@
+Dto/CerealDto.cs,4\a\4aa60e72603fd400c7e00d0bbbb4f667686a2367

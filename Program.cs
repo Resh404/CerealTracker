@@ -41,10 +41,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 // Seed data if requested
 if (args.Length == 1 && args[0].ToLower() == "seeddata")

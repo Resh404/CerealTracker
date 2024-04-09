@@ -400,5 +400,34 @@ public class CerealController : Controller
         return NoContent(); // 204 status code
     }
 
+    [HttpDelete("delete/{cerealId:int}")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> DeleteCerealAsync(int cerealId)
+    {
+        var matchingCereal = await _cerealRepository.CerealExistsAsync(cerealId);
+        if (!matchingCereal)
+        {
+            ModelState.AddModelError("", "A cereal with that ID does not exist.");
+            return NotFound();
+        }
 
+        var cerealToDelete = await _cerealRepository.GetCerealByIdAsync(cerealId);
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var deleted = await _cerealRepository.DeleteCerealAsync(cerealToDelete);
+
+        if (!deleted)
+        {
+            ModelState.AddModelError("", "Failed to delete cereal.");
+            return StatusCode(500, ModelState);
+        }
+
+        return NoContent();
+    }
 }

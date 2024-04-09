@@ -26,6 +26,6 @@ public interface ICerealRepository
     Task<bool> AddCerealAsync(Cereal cereal);
     Task<bool> CerealExistsAsync(int cerealId);
     Task<bool> UpdateCerealAsync(Cereal updatedCereal);
-    Task<bool> DeleteCerealAsync(int cerealId);
+    Task<bool> DeleteCerealAsync(Cereal cereal);
     Task<bool> SaveChangesAsync();
 }

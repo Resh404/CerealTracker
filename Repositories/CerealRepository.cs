@@ -143,9 +143,8 @@ namespace CerealAPI.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteCerealAsync(int cerealId)
+        public async Task<bool> DeleteCerealAsync(Cereal cereal)
         {
-            var cereal = await _context.Cereals.FirstOrDefaultAsync(c => c.Id == cerealId);
             _context.Remove(cereal);
             return await _context.SaveChangesAsync() > 0;
         }

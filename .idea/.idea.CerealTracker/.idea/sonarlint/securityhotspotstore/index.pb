@@ -50,3 +50,7 @@ V
 &Migrations/DataContextModelSnapshot.cs,7\2\728a54d99c5b4f32a0f10d344c7e747916808cb5
 @
 Dto/CerealDto.cs,4\a\4aa60e72603fd400c7e00d0bbbb4f667686a2367
+I
+Helper/MappingProfiles.cs,0\1\01b8a2f9d0d2cd731538ddbf2f3a8dc3a71e6667
+G
+Mappers/CerealMapper.cs,0\d\0d9bc3d1e838beca1db60a60df430fd3f635206e

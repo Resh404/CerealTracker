@@ -1,4 +1,6 @@
-﻿using CerealAPI.Interfaces;
+﻿using CerealAPI.Dto;
+using CerealAPI.Interfaces;
+using CerealAPI.Mappers;
 using CerealAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +24,10 @@ public class CerealController : Controller
     {
         try
         {
-            var cereals = await _cerealRepository.GetCerealsAsync(); // Assuming GetCereals() is asynchronous
+            var cereals = await _cerealRepository.GetCerealsAsync();
+            var cerealDto = cereals.Select(c => c.ToCerealDto());
 
-            return Ok(cereals);
+            return Ok(cerealDto);
         }
         catch (Exception ex)
         {
@@ -304,5 +307,98 @@ public class CerealController : Controller
             return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while fetching the cereals.");
         }
     }
+
+    [HttpPost]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(422)]
+    public async Task<IActionResult> AddCerealAsync([FromBody] CerealDto cerealCreate)
+    {
+        if (cerealCreate == null)
+            return BadRequest();
+
+        var cereals = await _cerealRepository.GetCerealsAsync();
+        var matchingCereal = cereals.FirstOrDefault(c =>
+            string.Equals(c.Name.Trim(), cerealCreate.name.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        if (matchingCereal != null)
+        {
+            ModelState.AddModelError("", "A cereal with that name already exists.");
+            return StatusCode(422, ModelState);
+        }
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        // Convert CerealDto to Cereal entity before passing to repository
+        var cereal = cerealCreate.ToCerealFromDto();
+
+        // Add cereal to the repository
+        var added = await _cerealRepository.AddCerealAsync(cereal);
+        if (!added)
+        {
+            // Handle failure to add cereal to the repository
+            return StatusCode(500, "Failed to add cereal.");
+        }
+
+        return NoContent(); // 204 status code
+    }
+
+    [HttpPut("update/{cerealId:int}")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UpdateCerealAsync(int cerealId, [FromBody] CerealDto cerealUpdate)
+    {
+        if (cerealUpdate == null)
+            return BadRequest();
+
+        var cereals = await _cerealRepository.GetCerealsAsync();
+        var cerealToBeUpdated = cereals.FirstOrDefault(c => c.Id == cerealId);
+
+        var matchingCereal = await _cerealRepository.CerealExistsAsync(cerealId);
+
+        if (!matchingCereal)
+        {
+            ModelState.AddModelError("", "A cereal with that ID does not exist.");
+            return NotFound();
+        }
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        // Convert CerealDto to Cereal entity before passing to repository
+        var updatedCereal = new Cereal
+        {
+            Id = cerealId, // Make sure to assign the Id if it's not an init-only property
+            Name = cerealUpdate.name,
+            Manufacturer = cerealUpdate.manufacturer,
+            Type = cerealUpdate.type,
+            Calories = cerealUpdate.calories,
+            Protein = cerealUpdate.protein,
+            Fat = cerealUpdate.fat,
+            Sodium = cerealUpdate.sodium,
+            Fiber = cerealUpdate.fiber,
+            Carbohydrates = cerealUpdate.carbohydrates,
+            Sugars = cerealUpdate.sugars,
+            Potassium = cerealUpdate.potassium,
+            Vitamins = cerealUpdate.vitamins,
+            Shelf = cerealUpdate.shelf,
+            Weight = cerealUpdate.weight,
+            Cups = cerealUpdate.cups,
+            Rating = cerealUpdate.rating
+        };
+
+        // Update cereal in the repository
+        var updated = await _cerealRepository.UpdateCerealAsync(updatedCereal);
+        if (!updated)
+        {
+            // Handle failure to update cereal in the repository
+            return StatusCode(500, "Failed to update cereal.");
+        }
+
+        return NoContent(); // 204 status code
+    }
+
 
 }

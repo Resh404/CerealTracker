@@ -2,21 +2,21 @@
 
 public class CerealDto
 {
-    public int Id { get; init; }
-    public string Name { get; init; }
-    public string Manufacturer { get; init; }
-    public string Type { get; init; }
-    public int Calories { get; init; }
-    public int Protein { get; init; }
-    public int Fat { get; init; }
-    public int Sodium { get; init; }
-    public float Fiber { get; init; }
-    public float Carbohydrates { get; init; }
-    public int Sugars { get; init; }
-    public int Potassium { get; init; }
-    public int Vitamins { get; init; }
-    public int Shelf { get; init; }
-    public float Weight { get; init; }
-    public float Cups { get; init; }
-    public string Rating { get; init; }
+    public string name { get; init; }
+    public string manufacturer { get; init; }
+    public string type { get; init; }
+    public int calories { get; init; }
+    public int protein { get; init; }
+    public int fat { get; init; }
+    public int sodium { get; init; }
+    public float fiber { get; init; }
+    public float carbohydrates { get; init; }
+    public int sugars { get; init; }
+    public int potassium { get; init; }
+    public int vitamins { get; init; }
+    public int shelf { get; init; }
+    public float weight { get; init; }
+    public float cups { get; init; }
+    public string rating { get; init; }
+
 }

@@ -1,4 +1,5 @@
-﻿using CerealAPI.Models;
+﻿using CerealAPI.Dto;
+using CerealAPI.Models;
 
 namespace CerealAPI.Interfaces;
 
@@ -22,8 +23,9 @@ public interface ICerealRepository
     Task<ICollection<Cereal>> GetCerealByWeightAsync(float weight);
     Task<ICollection<Cereal>> GetCerealByCupsAsync(float cups);
     Task<ICollection<Cereal>> GetCerealByRatingAsync(string rating);
-    // Task<Cereal> AddCerealAsync(Cereal cereal);
-    // Task<Cereal> UpdateCerealAsync(Cereal cereal);
-    // Task<Cereal> DeleteCerealAsync(int id);
-    // Task SaveChangesAsync();
+    Task<bool> AddCerealAsync(Cereal cereal);
+    Task<bool> CerealExistsAsync(int cerealId);
+    Task<bool> UpdateCerealAsync(Cereal updatedCereal);
+    Task<bool> DeleteCerealAsync(int cerealId);
+    Task<bool> SaveChangesAsync();
 }

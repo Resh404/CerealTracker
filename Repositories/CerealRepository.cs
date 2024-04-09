@@ -1,4 +1,5 @@
 ﻿using CerealAPI.Data;
+using CerealAPI.Dto;
 using CerealAPI.Interfaces;
 using CerealAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -103,6 +104,56 @@ namespace CerealAPI.Repositories
         public async Task<ICollection<Cereal>> GetCerealByRatingAsync(string rating)
         {
             return await _context.Cereals.Where(c => c.Rating == rating).ToListAsync();
+        }
+
+        public async Task<bool> AddCerealAsync(Cereal cereal)
+        {
+            try
+            {
+                await _context.AddAsync(cereal);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log the exception or handle it as appropriate
+                return false;
+            }
+        }
+
+
+        public async Task<bool> CerealExistsAsync(int cerealId)
+        {
+            return await _context.Cereals.AnyAsync(c => c.Id == cerealId);
+        }
+
+        public async Task<bool> UpdateCerealAsync(Cereal updatedCereal)
+        {
+            // Detach the existing entity from the context
+            var existingCereal = await _context.Cereals.FindAsync(updatedCereal.Id);
+            if (existingCereal != null)
+            {
+                _context.Entry(existingCereal).State = EntityState.Detached;
+            }
+
+            // Attach the updated entity to the context
+            _context.Update(updatedCereal);
+
+            // Save changes
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteCerealAsync(int cerealId)
+        {
+            var cereal = await _context.Cereals.FirstOrDefaultAsync(c => c.Id == cerealId);
+            _context.Remove(cereal);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            var saved = await _context.SaveChangesAsync();
+            return saved > 0;
         }
     }
 }

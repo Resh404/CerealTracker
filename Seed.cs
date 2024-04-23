@@ -14,7 +14,7 @@ namespace CerealAPI
 
         public void SeedDataContext()
         {
-            // Check if database already has data
+            // Check if the database already has data
             if (_dataContext.Cereals.Any())
             {
                 Console.WriteLine("Database already seeded.");
@@ -24,6 +24,9 @@ namespace CerealAPI
             // Read the CSV file
             string csvFilePath = "./Cereal.csv";
             string[] csvLines = File.ReadAllLines(csvFilePath);
+
+            // Create a list to store cereal objects
+            List<Cereal> cerealsToAdd = new List<Cereal>();
 
             foreach (var csvLine in csvLines.Skip(2)) // Skip header line
             {
@@ -49,14 +52,59 @@ namespace CerealAPI
                     Rating = csvValues[15]
                 };
 
-                // Add Cereal object to database context
-                _dataContext.Cereals.Add(cereal);
+                // Add the cereal object to the list
+                cerealsToAdd.Add(cereal);
             }
+
+            // Sort the list of cereals alphabetically by name
+            cerealsToAdd = cerealsToAdd.OrderBy(o => o.Name).ToList();
+
+            // Add sorted cereals to the database context
+            _dataContext.Cereals.AddRange(cerealsToAdd);
 
             // Save changes to the database
             _dataContext.SaveChanges();
 
             Console.WriteLine("Database seeded successfully.");
+        }
+
+
+        public void SeedImages()
+        {
+            string folderPath = @"C:\Users\KOM\Downloads\Cereal pictures\Cereal Pictures";
+
+            // Get file paths of all images in the folder
+            string[] imageFilePaths = Directory.GetFiles(folderPath, "*");
+
+            // Create a list to store image objects
+            List<Image> imagesToAdd = new List<Image>();
+            int i = 1;
+
+            // Add the cerealImage objects to the list
+            foreach (var imagePath in imageFilePaths)
+            {
+                // Create a new Image object with the file path
+                var image = new Image
+                {
+                    ImageFilePath = imagePath,
+                    CerealId = i
+                };
+
+                // Add the image object to the list
+                imagesToAdd.Add(image);
+                i++;
+            }
+
+            // Sort the list of images alphabetically by file path
+            imagesToAdd =imagesToAdd.OrderBy(o => o.ImageFilePath).ToList();
+
+            // Add sorted images to the database context
+            _dataContext.Images.AddRange(imagesToAdd);
+
+            // Save changes to the database
+            _dataContext.SaveChanges();
+
+            Console.WriteLine("Database populated with image file paths.");
         }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CerealAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240405111651_InitialCreate")]
+    [Migration("20240412110537_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -87,6 +87,47 @@ namespace CerealAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cereals");
+                });
+
+            modelBuilder.Entity("CerealAPI.Models.Image", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ImageId"));
+
+                    b.Property<int>("CerealId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageFilePath")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("CerealId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("CerealAPI.Models.Image", b =>
+                {
+                    b.HasOne("CerealAPI.Models.Cereal", "Cereal")
+                        .WithOne("Image")
+                        .HasForeignKey("CerealAPI.Models.Image", "CerealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cereal");
+                });
+
+            modelBuilder.Entity("CerealAPI.Models.Cereal", b =>
+                {
+                    b.Navigation("Image")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

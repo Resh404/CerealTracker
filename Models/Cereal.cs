@@ -2,13 +2,13 @@
 
 namespace CerealAPI.Models;
 
-public record Cereal
+public class Cereal
 {
     [Key]
     public int Id { get; init; }
-    public string Name { get; init; }
-    public string Manufacturer { get; init; }
-    public string Type { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string Manufacturer { get; init; } = string.Empty;
+    public string Type { get; init; } = string.Empty;
     public int Calories { get; init; }
     public int Protein { get; init; }
     public int Fat { get; init; }
@@ -21,5 +21,9 @@ public record Cereal
     public int Shelf { get; init; }
     public float Weight { get; init; }
     public float Cups { get; init; }
-    public string Rating { get; init; }
+    public string Rating { get; init; } = string.Empty;
+
+    // Navigation property
+    public Image Image { get; init; }
+
 }

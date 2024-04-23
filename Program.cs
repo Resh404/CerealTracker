@@ -11,9 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
 builder.Services.AddScoped<ICerealRepository, CerealRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 builder.Services.AddDbContext<DataContext>((serviceProvider, options) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
@@ -34,6 +36,10 @@ else
     // Add production-specific error handling middleware
     // For example: app.UseExceptionHandler("/Error");
 }
+
+app.UseCors(x => x.WithOrigins("http://localhost:3000")
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
@@ -58,5 +64,6 @@ void SeedData(IHost app)
     {
         var service = scope.ServiceProvider.GetRequiredService<Seed>();
         service.SeedDataContext();
+        service.SeedImages();
     }
 }

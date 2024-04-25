@@ -9,6 +9,7 @@ public static class CerealMapper
     {
         return new CerealDto
         {
+            id = cerealModel.Id,
             name = cerealModel.Name,
             manufacturer = cerealModel.Manufacturer,
             type = cerealModel.Type,
@@ -32,6 +33,7 @@ public static class CerealMapper
     {
         return new Cereal
         {
+            Id = cerealDto.id,
             Name = cerealDto.name,
             Manufacturer = cerealDto.manufacturer,
             Type = cerealDto.type,

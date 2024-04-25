@@ -68,43 +68,74 @@ namespace CerealAPI
             Console.WriteLine("Database seeded successfully.");
         }
 
-
         public void SeedImages()
         {
-            string folderPath = @"C:\Users\KOM\Downloads\Cereal pictures\Cereal Pictures";
+            string folderPath = @"C:\Users\KOM\WebstormProjects\cereal_frontend\Cereal pictures";
 
             // Get file paths of all images in the folder
             string[] imageFilePaths = Directory.GetFiles(folderPath, "*");
 
             // Create a list to store image objects
             List<Image> imagesToAdd = new List<Image>();
-            int i = 1;
 
             // Add the cerealImage objects to the list
             foreach (var imagePath in imageFilePaths)
             {
-                // Create a new Image object with the file path
+                // Convert the image file to base64 string
+                string base64String = ImageToBase64(imagePath);
+
+                // Create a new Image object with the base64 string
                 var image = new Image
                 {
-                    ImageFilePath = imagePath,
-                    CerealId = i
+                    ImageBase64String = base64String,
+                    CerealId = imagesToAdd.Count + 1
                 };
 
                 // Add the image object to the list
                 imagesToAdd.Add(image);
-                i++;
             }
 
-            // Sort the list of images alphabetically by file path
-            imagesToAdd =imagesToAdd.OrderBy(o => o.ImageFilePath).ToList();
-
-            // Add sorted images to the database context
+            // Add images to the database context
             _dataContext.Images.AddRange(imagesToAdd);
 
             // Save changes to the database
             _dataContext.SaveChanges();
 
-            Console.WriteLine("Database populated with image file paths.");
+            Console.WriteLine("Database populated with image base64 strings.");
+        }
+
+        // Method to convert image file to base64 string
+        private string ImageToBase64(string imagePath)
+        {
+            // Read the image file into a byte array
+            byte[] imageData = File.ReadAllBytes(imagePath);
+
+            // Convert the byte array to a base64 string
+            string base64String = Convert.ToBase64String(imageData);
+
+            // Construct the data URI string with appropriate MIME type
+            string mimeType = GetMimeType(imagePath);
+            string dataUri = $"data:{mimeType};base64,{base64String}";
+
+            return dataUri;
+        }
+
+        // Method to get MIME type based on file extension
+        private string GetMimeType(string imagePath)
+        {
+            string extension = Path.GetExtension(imagePath).ToLower();
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                case ".gif":
+                    return "image/gif";
+                default:
+                    throw new NotSupportedException($"File format {extension} is not supported.");
+            }
         }
     }
 }

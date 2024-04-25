@@ -8,7 +8,7 @@ public class Image
 {
     [Key]
     public int ImageId { get; init; }
-    public string ImageFilePath { get; init; } = string.Empty;
+    public string ImageBase64String { get; set; } = string.Empty;
 
     // Foreign key property
     public int CerealId { get; init; }

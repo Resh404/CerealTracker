@@ -2,6 +2,7 @@
 
 public class CerealDto
 {
+    public int id { get; init; }
     public string name { get; init; }
     public string manufacturer { get; init; }
     public string type { get; init; }

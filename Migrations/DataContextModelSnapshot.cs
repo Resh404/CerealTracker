@@ -95,10 +95,9 @@ namespace CerealAPI.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ImageId"));
 
                     b.Property<int>("CerealId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageFilePath")
+                    b.Property<string>("ImageBase64String")
                         .IsRequired()
                         .HasColumnType("longtext");
 

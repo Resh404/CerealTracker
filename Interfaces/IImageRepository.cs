@@ -2,5 +2,5 @@
 
 public interface IImageRepository
 {
-    Task<string> GetImageFilePathAsync(int cerealId);
+    Task<string> GetImageFileBase64ByIdAsync(int cerealId);
 }

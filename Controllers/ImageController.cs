@@ -21,7 +21,7 @@ public class ImageController : ControllerBase
     {
         try
         {
-            var imagePath = await _imageRepository.GetImageFilePathAsync(cerealId);
+            var imagePath = await _imageRepository.GetImageFileBase64ByIdAsync(cerealId);
             return Ok(imagePath);
         }
         catch (Exception ex)

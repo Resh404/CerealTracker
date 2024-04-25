@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CerealAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240412110537_InitialCreate")]
+    [Migration("20240424121639_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,10 +98,9 @@ namespace CerealAPI.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ImageId"));
 
                     b.Property<int>("CerealId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageFilePath")
+                    b.Property<string>("ImageBase64String")
                         .IsRequired()
                         .HasColumnType("longtext");
 

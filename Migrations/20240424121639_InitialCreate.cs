@@ -53,7 +53,7 @@ namespace CerealAPI.Migrations
                 {
                     ImageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ImageFilePath = table.Column<string>(type: "longtext", nullable: false)
+                    ImageBase64String = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CerealId = table.Column<int>(type: "int", nullable: false)
                 },

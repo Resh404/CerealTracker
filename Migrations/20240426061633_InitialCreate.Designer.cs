@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CerealAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240424121639_InitialCreate")]
+    [Migration("20240426061633_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -70,7 +70,7 @@ namespace CerealAPI
 
         public void SeedImages()
         {
-            string folderPath = @"C:\Users\KOM\WebstormProjects\cereal_frontend\Cereal pictures";
+            string folderPath = "./Cereal pictures";
 
             // Get file paths of all images in the folder
             string[] imageFilePaths = Directory.GetFiles(folderPath, "*");

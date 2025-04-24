@@ -1,0 +1,20 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  cerealapi:
+    build:
+      context: "C:\\Users\\Reshad\\RiderProjects\\CerealAPI"
+      dockerfile: "DotNet.Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/CerealAPI.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "cerealapi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\Reshad\\RiderProjects\\CerealAPI:/app:rw"
+    - "C:\\Users\\Reshad\\RiderProjects\\CerealAPI:/src:rw"
+    - "C:\\Users\\Reshad\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"

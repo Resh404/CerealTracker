@@ -1,0 +1,30 @@
+﻿services:
+  cerealapi:
+    build:
+      dockerfile: DotNet.Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - mysqldb
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=server=mysqldb;port=3306;database=cereal_database;user=root;password=Kom12345;
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    restart: always
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: Kom12345
+      MYSQL_DATABASE: cereal_database
+    ports:
+      - "33060:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:

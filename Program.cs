@@ -19,11 +19,17 @@ builder.Services.AddCors();
 builder.Services.AddDbContext<DataContext>((serviceProvider, options) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("MySqlConnection");
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 36)));
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -50,7 +56,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Seed data if requested
-if (args.Length == 1 && args[0].ToLower() == "seeddata")
+// if (args.Length == 1 && args[0].ToLower() == "seeddata")
     SeedData(app);
 
 await app.RunAsync();
